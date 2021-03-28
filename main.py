@@ -1,5 +1,5 @@
-from src import html_loader, data_parser
-
+from src.html_loader import get_complete_page
+from src.data_parser import make_soup, get_name
 # Log running time
 import time
 start_time = time.time()
@@ -19,13 +19,13 @@ elements_to_load_first = [
 
 def scrape_data(url):
   # Get HTML using Selenium, telling it explicitly which elements to wait for
-  html = html_loader.get_complete_page(url, elements_to_load_first)
+  html = get_complete_page(url, elements_to_load_first)
 
   # Convert html to soup
-  soup = data_parser.make_soup(html)
+  soup = make_soup(html)
 
   # Get property name
-  name = data_parser.get_name(soup)
+  name = get_name(soup)
   print(f'Name: {name}')
 
 for url in PROPERTY_URLS:
