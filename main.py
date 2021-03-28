@@ -1,5 +1,6 @@
 from src.html_loader import get_complete_page
-from src.data_parser import make_soup, get_name
+from src.data_parser import make_soup, get_name, get_type
+
 # Log running time
 import time
 start_time = time.time()
@@ -10,7 +11,7 @@ PROPERTY_URLS = [
   'https://www.airbnb.co.uk/rooms/40558945'
 ]
 
-# Define which elements we need to wait for on the page first
+# Define which elements we need to wait for on the page before parsing
 elements_to_load_first = [
   'TITLE_DEFAULT',
   'OVERVIEW_DEFAULT',
@@ -18,15 +19,22 @@ elements_to_load_first = [
 ]
 
 def scrape_data(url):
+  
+  print(f'Scraping data for: {url}')
+
   # Get HTML using Selenium, telling it explicitly which elements to wait for
   html = get_complete_page(url, elements_to_load_first)
 
   # Convert html to soup
   soup = make_soup(html)
 
-  # Get property name
   name = get_name(soup)
-  print(f'Name: {name}')
+  print(f'- Name: {name}')
+
+  property_type = get_type(soup) # type a reserved word
+  print(f'- Type: {property_type}')
+
+  print('Done\n')
 
 for url in PROPERTY_URLS:
   scrape_data(url)

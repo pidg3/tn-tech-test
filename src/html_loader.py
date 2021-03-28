@@ -17,7 +17,6 @@ def get_complete_page(url, await_data=[]):
   driver.get(url)
 
   # Wait until dynamic content has loaded
-  # TODO: is this the section we will await on for concurrency?
   for section in await_data:
     WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id={section}]')))
