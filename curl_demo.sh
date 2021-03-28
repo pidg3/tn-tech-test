@@ -24,6 +24,6 @@ curl 'https://www.airbnb.co.uk/api/v3/StaysPdpSections?operationName=StaysPdpSec
   --compressed | grep "Birch Lodge 16, Newton Stewart"
 
   echo ""
-  echo "The fact you're seeing this output means 'Birch Lodge 16, Newton Stewart' is in there... somewhere"
+  echo "The fact you're seeing the above grep output means 'Birch Lodge 16, Newton Stewart' is in the response to https://www.airbnb.co.uk/api/v3/StaysPdpSections for property ID 33090114"
   echo ""
-  echo "(Also - note the moaning about lack of integration tests that for some reason is included at the end of the response!)"
+  echo "(On a separate note - see the moaning about lack of integration tests that for some reason is included at the end of this response!)"

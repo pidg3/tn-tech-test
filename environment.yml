@@ -8,4 +8,4 @@ dependencies:
   - pep8
   - pylint
   - pytest
-
+  - flask
