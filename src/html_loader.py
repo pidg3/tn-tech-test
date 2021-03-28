@@ -5,8 +5,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+# Define which elements we need to wait for on the page before parsing
+elements_to_load_first = [
+  'TITLE_DEFAULT',
+  'OVERVIEW_DEFAULT',
+  'AMENITIES_DEFAULT'
+]
+
 # Load page, waiting for certain parts of the page to fully load before returning
-def get_complete_page(url, await_data=[]):
+def get_complete_page(url):
 
   # Set up Selenium options (run in headless mode for better performance)
   options = Options()
@@ -20,7 +27,7 @@ def get_complete_page(url, await_data=[]):
     driver.get(url)
 
     # Wait until dynamic content has loaded
-    for section in await_data:
+    for section in elements_to_load_first:
       WebDriverWait(driver, 5).until(
           EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id={section}]')))
 

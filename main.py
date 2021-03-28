@@ -1,59 +1,87 @@
 from src.html_loader import get_complete_page
 from src.data_parser import make_soup, get_name, get_type, get_num_bedrooms, get_num_bathrooms, get_amenities
+from src.custom_exceptions import TypeParsingException
 from selenium.common.exceptions import TimeoutException
+import threading
+from flask import Flask, jsonify
+app = Flask(__name__)
 
-# Log running time
-import time
-start_time = time.time()
-
-PROPERTY_URLS = [
-  'https://www.airbnb.co.uk/rooms/33571268',
-  'https://www.airbnb.co.uk/rooms/33090114',
-  'https://www.airbnb.co.uk/rooms/40558945'
-]
-
-# Define which elements we need to wait for on the page before parsing
-elements_to_load_first = [
-  'TITLE_DEFAULT',
-  'OVERVIEW_DEFAULT',
-  'AMENITIES_DEFAULT'
-]
-
-def scrape_data(url):
+# Get data for a single property and append to 'results'
+def scrape_data(url, results):
   
-  print(f'Scraping data for: {url}')
-
   try:
     # Get HTML using Selenium, telling it explicitly which elements to wait for
-    html = get_complete_page(url, elements_to_load_first)
+    html = get_complete_page(url)
 
     # Convert html to soup
     soup = make_soup(html)
 
     name = get_name(soup)
-    print(f'- Name: {name}')
-
     property_type = get_type(soup) # 'type' a reserved word
-    print(f'- Type: {property_type}')
-
     num_bedrooms = get_num_bedrooms(soup)
-    print(f'- Number bedrooms: {num_bedrooms}')
-
     num_bathrooms = get_num_bathrooms(soup)
-    print(f'- Number bathrooms: {num_bathrooms}')
-
     amenities = get_amenities(soup)
-    print(f'- Amenities: {amenities}')
 
-    print('Done\n')
+    results.append({
+      'success': True,
+      'url': url,
+      'name': name,
+      'propertyType': property_type,
+      'numBedrooms': num_bedrooms,
+      'numBathrooms': num_bathrooms,
+      'amenities': amenities
+    })
 
   # Handle Selenium timeouts (i.e. page doesn't exist)
   except TimeoutException:
-    print(f'Property URL {url} timed out: it probably doesn\'t exist\n')
+    results.append({
+      'success': False,
+      'url': url,
+      'errorReason': 'Timed out - property probably doesn\'t exist'
+    })
+  except TypeParsingException:
+    results.append({
+      'success': False,
+      'url': url,
+      'errorReason': 'Failed to parse property type'
+    })
 
-for url in PROPERTY_URLS:
-  scrape_data(url)
+# Get data for multiple properties using threads
+def get_multiple(urls):
 
-# Print total time taken to 1dp
-time_taken = round(time.time() - start_time, 1)
-print(f'Total time taken: {time_taken} s')
+  print(f'Fetching data for: {urls}')
+
+  # Log running time
+  import time
+  start_time = time.time()
+
+  threads = []
+  results = []
+  for url in urls:
+    # Create a separate thread for each URL
+    x = threading.Thread(target=scrape_data, args=(url, results))
+    threads.append(x)
+    x.start()
+
+  for thread in threads:
+    # Wait for all threads to finish
+    thread.join()
+
+  # Add metadata key, currently just has time taken
+  return {
+    'results': results,
+    'metadata': {
+      'timeTaken': time.time() - start_time
+    }
+  }
+
+# Convert ID to full Airbnb URL
+def get_full_url(id):
+  return f'https://www.airbnb.co.uk/rooms/{id}'
+
+# Expose Flask endpoint to fetch data
+@app.route('/v1/properties/<ids>')
+def get_properties(ids):
+  split_ids = ids.split(',')
+  urls = list(map(get_full_url, split_ids))
+  return jsonify(get_multiple(urls))
