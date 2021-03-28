@@ -11,7 +11,7 @@ Scrape property name, property type (e.g Apartment), number of bedrooms, bathroo
 
 - Exposes an endpoint `http://127.0.0.1:5000/v1/properties/[comma separated property IDs]` using Flask.
 - Uses Selenium to navigate the page and wait for elements to load.
-- Runs multiple Selenium sessions in parallel using threads.
+- Runs multiple Selenium sessions in parallel using threads (reduces time to get the three properties from about 25 to 12 seconds). 
 - Handles missing properties and regex issues. 
 - Returns time taken. 
 
@@ -83,15 +83,17 @@ Once the app is running (see below), to get data for the three requested propert
 - To get the server running:
   - `export FLASK_APP=main.py`
   - `python -m flask run`
+  - Now the endpoint can be pinged as described above. 
 - To run the tests:
   - `pytest`
 
 ## Next steps if @ work
 
 - Is Selenium the right solution for this? It feels a bit slow and clunky. I'd want to discuss with people who are more experienced in scraping. 
-- A creative alternative might be to reverse engineer the APIs that are providing the data. A brief exercise to grep out the responses suggested there might be some mileage in this: try running `curl_demo.sh`.
-- Refactor: both `data_parser` and `html_loader` are relying on the same elements. Splitting in this way is logical, but some sort of shared data structure describing the elements needed would help reduce duplication.
-- Testing: I'd like to write a test to validate the page structure on Airbnb hasn't changed (sort of like a contract test). Flask API could probably use a test or two. 
+- A creative alternative might be to reverse engineer the APIs that are providing the data. I got this half working, but keys seem to rotate quite frequently. Probably do-able but not trivial. 
+- Refactor: both `data_parser` and `html_loader` are relying on the same DOM elements. Splitting in this way is logical, but some sort of shared data structure describing the elements needed would help reduce duplication.
+- Another refactor: speed up detecting a property does not exist. Currently just waiting for Selenium waits to time out. 
+- Testing: I'd like to write a test to validate the page structure on Airbnb hasn't changed (sort of like a contract test). Also, Flask API could probably use a test or two. 
 - Docker: its a bit of a pain to have to set up the environment and download the Firefox driver. Would be better to create a new Docker image to automate this. 
 
 Apart from that, it would depend on how this tool was to be used. Given it takes quite a while to load (and is a bit flaky, with multiple attempts sometimes needed) it would lend itself to some sort of queue/worker system. Perhaps using SQS/Lambdas on AWS, putting the results in DynamoDB. We'd probably also want some sort of continuous validation of the data collected.
