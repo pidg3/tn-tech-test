@@ -1,5 +1,5 @@
 from src.html_loader import get_complete_page
-from src.data_parser import make_soup, get_name, get_type
+from src.data_parser import make_soup, get_name, get_type, get_num_bedrooms, get_num_bathrooms
 
 # Log running time
 import time
@@ -31,8 +31,14 @@ def scrape_data(url):
   name = get_name(soup)
   print(f'- Name: {name}')
 
-  property_type = get_type(soup) # type a reserved word
+  property_type = get_type(soup) # 'type' a reserved word
   print(f'- Type: {property_type}')
+
+  num_bedrooms = get_num_bedrooms(soup)
+  print(f'- Number bedrooms: {num_bedrooms}')
+
+  num_bathrooms = get_num_bathrooms(soup)
+  print(f'- Number bathrooms: {num_bathrooms}')
 
   print('Done\n')
 
