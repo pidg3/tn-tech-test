@@ -38,3 +38,21 @@ def get_num_bathrooms(soup):
   spans = type_default_div.find('div', class_='_tqmy57')
   bathrooms_text = spans.find(string=re.compile("bathroom"))
   return int(bathrooms_text.split(' ')[0])
+
+def get_amenities(soup):
+  # Grab the whole amenities model
+  amenities_modal = soup.find('div', {'data-testid': 'modal-container'})
+
+  # Get all the 'amenity' divs
+  all_amenities = amenities_modal.find_all('div', class_='_vzrbjl')
+
+  # Filter out the amenities that are in fact unavailable
+  # ... we can infer this from whether the item contains a 'del' (deleted) tag
+  available_amenities = []
+  for amenity in all_amenities:
+    if amenity.find('del') == None:
+
+      # Some elements contain sub-text in a child div - this is not needed, so recursive=False
+      available_amenities.append(amenity.find(text=True, recursive=False))
+  
+  return available_amenities

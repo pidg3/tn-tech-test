@@ -21,6 +21,8 @@ Basic version:
   - *3rd property does not exist - handling needed!*
   - *Saving the HTML speeds things up a lot. Of course, risk is here these tests give us false confidence - the page structure could change at any moment.*
 - [] Grab other fields (amenity list may be slightly tricker as full list in modal) and print
+  - *Couple of gotchas with amenities - struck through ones, and those with sub-text.*
+  - *Assumed here the sub-text isn't needed, nor is the categorisation.*
 - [] Think about concurrency - we don't want to wait for pages to be loaded synchronously
 
 Other ideas:
@@ -33,3 +35,4 @@ Other ideas:
 
 - Need Firefox Selenium thing to run
 - Refactoring 'elements to load' and div path
+- Remember instructions!
