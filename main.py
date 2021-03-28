@@ -1,5 +1,6 @@
 from src.html_loader import get_complete_page
 from src.data_parser import make_soup, get_name, get_type, get_num_bedrooms, get_num_bathrooms, get_amenities
+from selenium.common.exceptions import TimeoutException
 
 # Log running time
 import time
@@ -22,28 +23,33 @@ def scrape_data(url):
   
   print(f'Scraping data for: {url}')
 
-  # Get HTML using Selenium, telling it explicitly which elements to wait for
-  html = get_complete_page(url, elements_to_load_first)
+  try:
+    # Get HTML using Selenium, telling it explicitly which elements to wait for
+    html = get_complete_page(url, elements_to_load_first)
 
-  # Convert html to soup
-  soup = make_soup(html)
+    # Convert html to soup
+    soup = make_soup(html)
 
-  name = get_name(soup)
-  print(f'- Name: {name}')
+    name = get_name(soup)
+    print(f'- Name: {name}')
 
-  property_type = get_type(soup) # 'type' a reserved word
-  print(f'- Type: {property_type}')
+    property_type = get_type(soup) # 'type' a reserved word
+    print(f'- Type: {property_type}')
 
-  num_bedrooms = get_num_bedrooms(soup)
-  print(f'- Number bedrooms: {num_bedrooms}')
+    num_bedrooms = get_num_bedrooms(soup)
+    print(f'- Number bedrooms: {num_bedrooms}')
 
-  num_bathrooms = get_num_bathrooms(soup)
-  print(f'- Number bathrooms: {num_bathrooms}')
+    num_bathrooms = get_num_bathrooms(soup)
+    print(f'- Number bathrooms: {num_bathrooms}')
 
-  amenities = get_amenities(soup)
-  print(f'- Amenities: {amenities}')
+    amenities = get_amenities(soup)
+    print(f'- Amenities: {amenities}')
 
-  print('Done\n')
+    print('Done\n')
+
+  # Handle Selenium timeouts (i.e. page doesn't exist)
+  except TimeoutException:
+    print(f'Property URL {url} timed out: it probably doesn\'t exist\n')
 
 for url in PROPERTY_URLS:
   scrape_data(url)
