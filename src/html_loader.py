@@ -26,17 +26,15 @@ def get_complete_page(url, await_data=[]):
 
     # Clear cookie warning (otherwise this gets in the way of us opening amenity list)
     driver \
-      .find_element_by_css_selector("[data-testid=main-cookies-banner-container]") \
-      .find_element_by_class_name('_1qnlffd6') \
+      .find_element_by_css_selector("[data-testid=main-cookies-banner-container] ._1qnlffd6") \
       .click()
 
-    WebDriverWait(driver, 1).until(
-      EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id=AMENITIES_DEFAULT]')))
+    WebDriverWait(driver, 3).until(
+      EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id=AMENITIES_DEFAULT] a')))
 
     # Click through to get full amenity list modal
     driver \
-      .find_element_by_css_selector("[data-plugin-in-point-id=AMENITIES_DEFAULT]") \
-      .find_element_by_class_name('_13e0raay') \
+      .find_element_by_css_selector("[data-plugin-in-point-id=AMENITIES_DEFAULT] a") \
       .click()
 
     # Wait until amenities modal loaded
