@@ -1,0 +1,11 @@
+name: tech_test
+channels:
+  - defaults
+dependencies:
+  - requests
+  - selenium
+  - bs4
+  - pep8
+  - pylint
+  - pytest
+
