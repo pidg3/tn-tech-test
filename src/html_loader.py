@@ -29,6 +29,7 @@ def get_complete_page(url, await_data=[]):
       .find_element_by_css_selector("[data-testid=main-cookies-banner-container] ._1qnlffd6") \
       .click()
 
+    # Make sure we can see the amenities 'Read more' a tag
     WebDriverWait(driver, 3).until(
       EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id=AMENITIES_DEFAULT] a')))
 
