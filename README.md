@@ -16,8 +16,9 @@ Basic version:
 - [x] Decide on scraper to use (looks like content loaded dynamically)
   - *Tried out Beautiful Soup - didn't work due to dynamic content, as expected.*
   - *However the parser seems nice. Let's try using Selenium to fully load the page, and then pass to Beautiful Soup to grab the actual data.*
-- [] Hack together basic scraper to grab property name and print to console
+- [x] Hack together basic scraper to grab property name and print to console
 - [] Structure things properly and add tests
+  - *3rd property does not exist - handling needed!*
 - [] Grab other fields (amenity list may be slightly tricker as full list in modal) and print
 - [] Think about concurrency - we don't want to wait for pages to be loaded synchronously
 
@@ -30,3 +31,4 @@ Other ideas:
 ### Reminders (tidy up before submitting)
 
 - Need Firefox Selenium thing to run
+- Refactoring 'elements to load' and div path
