@@ -9,9 +9,13 @@ Scrape property name, property type (e.g Apartment), number of bedrooms, bathroo
 
 ### Plan
 
+(Thought it would be worth including my train of thought as I went through this - see sub bullets)
+
 Basic version:
 
-- [] Decide on scraper to use (looks like content loaded dynamically)
+- [x] Decide on scraper to use (looks like content loaded dynamically)
+  - *Tried out Beautiful Soup - didn't work due to dynamic content, as expected.*
+  - *However the parser seems nice. Let's try using Selenium to fully load the page, and then pass to Beautiful Soup to grab the actual data.*
 - [] Hack together basic scraper to grab property name and print to console
 - [] Structure things properly and add tests
 - [] Grab other fields (amenity list may be slightly tricker as full list in modal) and print
@@ -22,3 +26,7 @@ Other ideas:
 - [] Test to validate the page structure hasn't changed?
 - [] Wrap everything in an API call (with caching?)
 - [] Reverse engineering APIs - is this feasible? Might be a lot faster than scraping, particularly due to way content is loaded dynamically
+
+### Reminders (tidy up before submitting)
+
+- Need Firefox Selenium thing to run
