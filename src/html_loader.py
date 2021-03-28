@@ -30,14 +30,18 @@ def get_complete_page(url, await_data=[]):
       .find_element_by_class_name('_1qnlffd6') \
       .click()
 
+    WebDriverWait(driver, 1).until(
+      EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-plugin-in-point-id=AMENITIES_DEFAULT]')))
+
     # Click through to get full amenity list modal
     driver \
+      .find_element_by_css_selector("[data-plugin-in-point-id=AMENITIES_DEFAULT]") \
       .find_element_by_class_name('_13e0raay') \
       .click()
 
     # Wait until amenities modal loaded
-    WebDriverWait(driver, 3).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, f'[data-testid=modal-container]')))
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, f'[aria-label=Amenities]')))
 
     
     # Return html and close webdriver connection
