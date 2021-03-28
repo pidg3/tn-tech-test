@@ -54,4 +54,6 @@ def scrape_data(url):
 for url in PROPERTY_URLS:
   scrape_data(url)
 
-print("--- %s seconds ---" % (time.time() - start_time))
+# Print total time taken to 1dp
+time_taken = round(time.time() - start_time, 1)
+print(f'Total time taken: {time_taken} s')
