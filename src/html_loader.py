@@ -1,6 +1,5 @@
 # We need Selenium due to dynamic loading of page content
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,11 +15,14 @@ elements_to_load_first = [
 def get_complete_page(url):
 
   # Set up Selenium options (run in headless mode for better performance)
-  options = Options()
-  options.headless = True
-  driver = webdriver.Firefox(options=options)
+  # Image loading disabled: https://stackoverflow.com/questions/28070315/python-disable-images-in-selenium-google-chromedriver
+  chrome_options = webdriver.ChromeOptions()
+  prefs = {"profile.managed_default_content_settings.images": 2}
+  chrome_options.add_experimental_option("prefs", prefs)
+  chrome_options.headless = True
+  driver = webdriver.Chrome(chrome_options=chrome_options)
 
-  # Wrap in a try/except so we can close down the driver if time out
+  # Wrap in a try/except so we can close down the driver if hit an issue
   try:
     
     # Get the page (initially not fully loaded due to dynamic content)
